@@ -97,10 +97,26 @@
                   :min-height="100"
                   aria-placeholder="add note"
                 ></textarea-autosize>
+                <p class="mt-0 pt-0">Start</p>
+                <v-text-field
+                  class="mt-0 pt-0"
+                  v-model="selectedEvent.start"
+                  type="date"
+                  style="width: 100%"
+                  :min-height="100"
+                ></v-text-field>
+                <p class="mt-0 pt-0">End</p>
+                <v-text-field
+                  class="mt-0 pt-0"
+                  v-model="selectedEvent.end"
+                  type="date"
+                  style="width: 100%"
+                  :min-height="100"
+                ></v-text-field>
               </form>
             </v-card-text>
             <v-card-actions>
-              <v-btn text color="secondary" @click="selectedOpen = false">Close</v-btn>
+              <v-btn text color="secondary" @click="closeEvent()">Close</v-btn>
               <v-btn
                 text
                 v-if="currentlyEditing !== selectedEvent.id"
@@ -216,7 +232,9 @@ export default {
         .collection("calEvent")
         .doc(this.currentlyEditing)
         .update({
-          details: ev.details
+          details: ev.details,
+          start: ev.start,
+          end: ev.end
         });
       this.selectedOpen = false;
       this.currentlyEditing = null;
@@ -263,6 +281,10 @@ export default {
       }
 
       nativeEvent.stopPropagation();
+    },
+    closeEvent() {
+      this.selectedOpen = false;
+      this.currentlyEditing = null;
     },
     updateRange({ start, end }) {
       // You could load events from an outside source (like database) now that we have the start and end dates on the calendar
